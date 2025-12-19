@@ -1,0 +1,169 @@
+/**
+ * TypeMap Mindmap Styles
+ * Styles for the codebase visualization webview
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, sans-serif);
+  background: var(--vscode-editor-background, #1e1e1e);
+  color: var(--vscode-editor-foreground, #d4d4d4);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#mindmap {
+  width: 100%;
+  height: 100%;
+}
+
+#controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 6px 12px;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+button.active {
+  background: var(--vscode-button-secondaryBackground, #3a3d41);
+}
+
+#info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: var(--vscode-editor-background, #1e1e1e);
+  border: 1px solid var(--vscode-panel-border, #454545);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  max-width: 300px;
+}
+
+#tooltip {
+  position: absolute;
+  background: var(--vscode-editorWidget-background, #252526);
+  border: 1px solid var(--vscode-editorWidget-border, #454545);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+#tooltip.visible {
+  opacity: 1;
+}
+
+.tooltip-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.tooltip-type {
+  color: var(--vscode-descriptionForeground, #808080);
+  font-size: 11px;
+}
+
+.tooltip-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--vscode-editorWidget-border, #454545);
+  font-size: 10px;
+}
+
+.tooltip-metrics span {
+  background: var(--vscode-badge-background, #3c3c3c);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--vscode-badge-foreground, #cccccc);
+}
+
+/* Node colors by type */
+.node-root { fill: #6c71c4; }
+.node-folder { fill: #b58900; }
+.node-file { fill: #268bd2; }
+.node-class { fill: #2aa198; }
+.node-interface { fill: #859900; }
+.node-function { fill: #cb4b16; }
+.node-type { fill: #d33682; }
+.node-enum { fill: #6c71c4; }
+.node-variable { fill: #93a1a1; }
+.node-component { fill: #2aa198; }
+.node-hook { fill: #859900; }
+
+/* Git status colors */
+.git-modified { stroke: #e2c08d; stroke-width: 3px; }
+.git-added { stroke: #89d185; stroke-width: 3px; }
+.git-deleted { stroke: #c74e39; stroke-width: 3px; }
+.git-untracked { stroke: #73c991; stroke-width: 3px; }
+
+.link {
+  fill: none;
+  stroke: var(--vscode-editorLineNumber-foreground, #5a5a5a);
+  stroke-width: 1.5px;
+}
+
+.node text {
+  fill: var(--vscode-editor-foreground, #d4d4d4);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.node circle {
+  cursor: pointer;
+  transition: r 0.2s;
+}
+
+.node {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.node circle:hover {
+  r: 8;
+}
+
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: var(--vscode-descriptionForeground, #808080);
+}

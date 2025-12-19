@@ -1,0 +1,303 @@
+{
+  "name": "typemap",
+  "displayName": "TypeMap",
+  "description": "Visualize TypeScript/TSX codebases as interactive mindmaps",
+  "version": "0.0.1",
+  "publisher": "typemap",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typemap/typemap"
+  },
+  "engines": {
+    "vscode": "^1.107.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "typescript",
+    "tsx",
+    "react",
+    "mindmap",
+    "visualization",
+    "codebase",
+    "architecture"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/*.ts",
+    "workspaceContains:**/*.tsx"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "typemap.analyze",
+        "title": "Analyze Workspace",
+        "category": "TypeMap",
+        "icon": "$(search)"
+      },
+      {
+        "command": "typemap.analyzeFile",
+        "title": "Analyze Current File",
+        "category": "TypeMap",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "typemap.showMindmap",
+        "title": "Show Mindmap",
+        "category": "TypeMap",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "typemap.refresh",
+        "title": "Refresh",
+        "category": "TypeMap",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "typemap.clearCache",
+        "title": "Clear Cache",
+        "category": "TypeMap",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "typemap.exportSVG",
+        "title": "Export as SVG",
+        "category": "TypeMap",
+        "icon": "$(export)"
+      },
+      {
+        "command": "typemap.exportJSON",
+        "title": "Export as JSON",
+        "category": "TypeMap",
+        "icon": "$(json)"
+      },
+      {
+        "command": "typemap.findImplementations",
+        "title": "Find Implementations",
+        "category": "TypeMap",
+        "icon": "$(references)"
+      },
+      {
+        "command": "typemap.visualizationDemo",
+        "title": "Show Demo Visualization",
+        "category": "TypeMap",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "typemap.showMindmapD3",
+        "title": "Show Codebase Mindmap (D3)",
+        "category": "TypeMap",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "typemap.showTypeHierarchy",
+        "title": "Show Type Hierarchy",
+        "category": "TypeMap",
+        "icon": "$(symbol-class)"
+      },
+      {
+        "command": "typemap.showDependencies",
+        "title": "Show Dependencies Graph",
+        "category": "TypeMap",
+        "icon": "$(references)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "typemap.analyzeFile",
+          "when": "resourceLangId == typescript || resourceLangId == typescriptreact",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "typemap.findImplementations",
+          "when": "resourceLangId == typescript || resourceLangId == typescriptreact",
+          "group": "navigation@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "typemap.analyze",
+          "when": "explorerResourceIsFolder",
+          "group": "typemap@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "typemap.analyze",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "typemap.analyzeFile",
+          "when": "resourceLangId == typescript || resourceLangId == typescriptreact"
+        },
+        {
+          "command": "typemap.showMindmap",
+          "when": "typemap.hasAnalysis"
+        },
+        {
+          "command": "typemap.refresh",
+          "when": "typemap.hasAnalysis"
+        },
+        {
+          "command": "typemap.clearCache",
+          "when": "typemap.hasAnalysis"
+        },
+        {
+          "command": "typemap.exportSVG",
+          "when": "typemap.hasAnalysis"
+        },
+        {
+          "command": "typemap.exportJSON",
+          "when": "typemap.hasAnalysis"
+        },
+        {
+          "command": "typemap.findImplementations",
+          "when": "resourceLangId == typescript || resourceLangId == typescriptreact"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "TypeMap",
+      "properties": {
+        "typemap.analysis.include": {
+          "type": "array",
+          "default": [
+            "**/*.ts",
+            "**/*.tsx"
+          ],
+          "description": "Glob patterns for files to analyze"
+        },
+        "typemap.analysis.exclude": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/out/**",
+            "**/*.spec.ts",
+            "**/*.spec.tsx",
+            "**/*.test.ts",
+            "**/*.test.tsx",
+            "**/*.d.ts",
+            "**/*.d.tsx"
+          ],
+          "description": "Glob patterns for files to exclude"
+        },
+        "typemap.analysis.maxFiles": {
+          "type": "number",
+          "default": 10000,
+          "description": "Maximum number of files to analyze"
+        },
+        "typemap.analysis.maxDepth": {
+          "type": "number",
+          "default": 5,
+          "description": "Maximum depth for initial mindmap"
+        },
+        "typemap.visualization.layout": {
+          "type": "string",
+          "enum": [
+            "radial",
+            "tree",
+            "force-directed",
+            "cluster"
+          ],
+          "default": "radial",
+          "description": "Default layout algorithm"
+        },
+        "typemap.visualization.theme": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "light",
+            "dark"
+          ],
+          "default": "auto",
+          "description": "Visualization theme"
+        },
+        "typemap.performance.workerCount": {
+          "type": "number",
+          "default": 0,
+          "description": "Number of worker threads (0 = auto-detect based on CPU cores)"
+        },
+        "typemap.performance.cacheSize": {
+          "type": "number",
+          "default": 100,
+          "description": "L1 cache size in MB"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "typemap",
+          "title": "TypeMap",
+          "icon": "media/typemap-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "typemap": [
+        {
+          "id": "typemap.reports",
+          "name": "Reports",
+          "type": "tree"
+        },
+        {
+          "id": "typemap.graph",
+          "name": "Graph",
+          "type": "tree"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "typemap.findImplementations",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "editorTextFocus && resourceLangId =~ /typescript|typescriptreact/"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "test:unit": "npx ts-node src/test/unit/lightweightParser.test.ts",
+    "test:integration": "npx ts-node src/test/integration/lightweightParser.integration.test.ts",
+    "benchmark": "npx ts-node --project src/test/benchmark/tsconfig.json src/test/benchmark/runBenchmark.ts",
+    "benchmark:testdata": "npx ts-node --project src/test/benchmark/tsconfig.json src/test/benchmark/runBenchmark.ts ./testdata",
+    "benchmark:typeanalyzer": "npx ts-node --project src/test/benchmark/tsconfig.json src/test/benchmark/typeAnalyzerBenchmark.ts"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.15.6",
+    "@swc/wasm": "^1.15.6",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.107.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.39.1",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "xxhash-wasm": "^1.1.0"
+  }
+}
